@@ -10,7 +10,7 @@ import java.io.IOException;
 
 /**
  * @Author: Magicfeng007
- * @Description:
+ * @Description: 获取NCDC每年最高的温度
  * @Date: Created in 2018-04-15---下午6:17
  */
 public class MaxTemperature {
