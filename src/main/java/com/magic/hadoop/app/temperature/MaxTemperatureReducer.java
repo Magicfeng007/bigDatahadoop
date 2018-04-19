@@ -1,6 +1,7 @@
 package com.magic.hadoop.app.temperature;
 
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
@@ -17,12 +18,9 @@ public class MaxTemperatureReducer extends Reducer<IntWritable,IntWritable,IntWr
         Iterator<IntWritable> iterator = values.iterator();
         int maxTemp = -99999;
         while (iterator.hasNext()){
-            if(iterator.next().get() > maxTemp){
-                maxTemp = iterator.next().get();
-            }
+            maxTemp = Math.max(maxTemp,iterator.next().get());
         }
-        IntWritable maxTempe = new IntWritable();
-        maxTempe.set(maxTemp);
-        context.write(key,maxTempe);
+        System.out.println("key:" + key.get() + " value:" + maxTemp);
+        context.write(key,new IntWritable(maxTemp));
     }
 }
