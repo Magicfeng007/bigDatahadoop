@@ -6,6 +6,8 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
 
+import java.io.InputStream;
+
 /**
  * @Author: Magicfeng007
  * @Description: 使用FileSystem来读取hadoop hdfs 中的文件并输出
@@ -17,14 +19,14 @@ public class FileSystemCat {
 
     public static void main(String[] args) throws Exception{
         Configuration conf = new Configuration();
-        FSDataInputStream fsDataInputStream = null;
+        InputStream in = null;
         try {
             FileSystem fileSystem = FileSystem.get(conf);
-            fsDataInputStream = fileSystem.open(new Path(args[0]));
-            IOUtils.copyBytes(fsDataInputStream,System.out,4096,false);
+            in = fileSystem.open(new Path(args[0]));
+            IOUtils.copyBytes(in,System.out,4096,false);
         }finally {
-            if(fsDataInputStream != null){
-                IOUtils.closeStream(fsDataInputStream);
+            if(in != null){
+                IOUtils.closeStream(in);
             }
         }
     }
