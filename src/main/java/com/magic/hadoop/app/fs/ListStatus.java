@@ -3,6 +3,7 @@ package com.magic.hadoop.app.fs;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 
 /**
@@ -31,6 +32,11 @@ public class ListStatus {
                 System.out.println("fileStatus.getAccessTime():" + fileStatus.getAccessTime());
                 System.out.println("fileStatus.getLen():" + fileStatus.getLen());
                 System.out.println("fileStatus.getReplication():" + fileStatus.getReplication());
+            }
+
+            Path[] listedPaths = FileUtil.stat2Paths(fileStatuses);
+            for (Path p:listedPaths) {
+                System.out.println(p);
             }
         }
 
