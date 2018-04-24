@@ -21,9 +21,14 @@ import java.io.IOException;
 public class MaxTemperature {
     public static void main(String[] args) {
         Configuration conf = new Configuration();
+
+        //只能通过参数mapreduce.job.queuename来指定mapreduce作业使用的队列名称，对hadoop不做任何队列的配置情况下，运行作业时hadoop会自动新建一个指定名称的队列
+        //无法通过在运行hadoop jar命令提交作业时指定队列名称hadoop jar app.jar -D mapreduce.job.queuename=root.etl.distcp
+        conf.set("mapreduce.job.queuename","x");
         try {
             //Job对象指定作业执行规范，可以用他来控制整个作业的运行
             Job job = Job.getInstance(conf,"MaxTemperature");
+
 
 
             //必须指定，否则报错Error: java.lang.RuntimeException: java.lang.ClassNotFoundException:
