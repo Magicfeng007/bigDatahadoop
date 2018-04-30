@@ -1,5 +1,6 @@
 package com.magic.hadoop.app.temperature;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -14,7 +15,7 @@ import java.io.IOException;
  * @Author: Magicfeng007
  * @Description: 获取NCDC每年最高的温度
  * 运行时需要使用命令：
- * hadoop jar bigData-hadoop-1.0-SNAPSHOT-without.jar com.magic.hadoop.app.temperature.MaxTemperature ./data/ output11
+ * hadoop jar bigData-hadoop-1.0-SNAPSHOT.jar com.magic.hadoop.app.temperature.MaxTemperature ./data/ output11 queuename
  * 类型必须为全包名，且需要使用jar指定jar包，输入文件目录必须为./data/，而不能为./data/*，输出目录必须不存在
  * @Date: Created in 2018-04-15---下午6:17
  */
@@ -24,7 +25,10 @@ public class MaxTemperature {
 
         //只能通过参数mapreduce.job.queuename来指定mapreduce作业使用的队列名称，对hadoop不做任何队列的配置情况下，运行作业时hadoop会自动新建一个指定名称的队列
         //无法通过在运行hadoop jar命令提交作业时指定队列名称hadoop jar app.jar -D mapreduce.job.queuename=root.etl.distcp
-        conf.set("mapreduce.job.queuename","x");
+        if(args == null || args.length < 2){
+            throw new IllegalArgumentException("不合符的参数个数，至少需要两个参数：数据文件以及结果文件输出目录");
+        }
+        conf.set("mapreduce.job.queuename",args.length > 2 ? args[2] : "default");
         try {
             //Job对象指定作业执行规范，可以用他来控制整个作业的运行
             Job job = Job.getInstance(conf,"MaxTemperature");
@@ -38,7 +42,7 @@ public class MaxTemperature {
             job.setMapperClass(MaxTemperatureMapper.class);
             job.setReducerClass(MaxTemperatureReducer.class);
 
-            //job.setCombinerClass(MaxTemperatureReducer.class);可以不设置，一般情况不要和setReducerClass同时用，否则可能导致reducer运行两次出问题
+            //job.setCombinerClass(MaxTemperatureReducer.class);属于优化方案，可以不设置，一般情况不要和setReducerClass同时用，否则可能导致reducer运行两次出问题
 
 
             //经测试发现，即使mapper产生出与reducer相同的类型时，setOutputKeyClass与
